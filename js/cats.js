@@ -19,24 +19,21 @@ for (var i in cats){
 	thisCat = thisCat.replace("%image%",cats[i].image);
 	thisCat = thisCat.replace("%name%",cats[i].name);
 	thisCat = thisCat.replace("%times%",cats[i].timesClicked);
-    $("body").prepend(thisCat);	
-	console.log(thisCat);
+    $("#cats").prepend(thisCat);	
+//	console.log(thisCat);
 }
 
 var timesClicked=0;
 
 $(document).ready(function(){
 	for (var i in cats){
-		$("#"+cats[i].div).click(function(){
-			var divName = "#"+cats[i].div+"-times";
+		var divTagName = "#"+cats[i].div;
+		console.log(cats[i]);
+		$(divTagName).click(function(){
+			var divName = cats[i].div+"-times";
 			cats[i].timesClicked++;
-			$( divName).replaceWith( '<div id='+divName+'><H1>Times Clicked = '+cats[i].timesClicked+"</H1></div>" );
+			$( "#"+divName).replaceWith( '<div id='+divName+'><H1>Times Clicked = '+cats[i].timesClicked+"</H1></div>" );
     });
 	}
-    $("#catpict").click(function(){
-		timesClicked++;
-		console.log(timesClicked);
-		$( "#times" ).replaceWith( '<div id="times"><H1>Times Clicked = '+timesClicked+"</H1></div>" );
-    });
 });
 
