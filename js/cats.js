@@ -28,9 +28,10 @@ var timesClicked=0;
 $(document).ready(function(){
 	for (var i in cats){
 		var divTagName = "#"+cats[i].div;
-		console.log(cats[i]);
-		$(divTagName).click(function(){
+		$(divTagName).click(function(event){
+			console.log(event);
 			var divName = cats[i].div+"-times";
+			console.log(divName);
 			cats[i].timesClicked++;
 			$( "#"+divName).replaceWith( '<div id='+divName+'><H1>Times Clicked = '+cats[i].timesClicked+"</H1></div>" );
     });
