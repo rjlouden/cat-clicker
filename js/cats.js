@@ -54,9 +54,9 @@ $(document).ready(function(){
 		$("#menu").append(thisButton);
 			
 		$("#button-"+catID).click(function(event){
-			$("#"+activeButton).addClass('btn-success').removeClass('btn-primary ');
+			$("#"+activeButton).addClass('btn-success').removeClass('btn-primary');
 			activeButton= event.currentTarget.id;
-			$("#"+event.currentTarget.id).removeClass('btn-success').addClass('btn-primary ');
+			$("#"+activeButton).removeClass('btn-success').addClass('btn-primary ');
 			var catID = event.currentTarget.id.replace(/^button-/,"");
 			var catHTML = cats[catID].catHTML.replace("%times%",cats[catID].timesClicked);
 			$( "#cats").replaceWith('<div id="cats" >'+catHTML+'</div>');
