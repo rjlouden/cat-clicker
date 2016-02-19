@@ -31,6 +31,8 @@ var cats = {
 	}
 };
 
+var activeButton;
+
 var catDivHTML = '<div id="%div-name%"><H1>%name%</H1><img src="%image%" alt="%name%"></div>';
     catDivHTML = catDivHTML + '<div id = "%div-name%-times"><H1>Times Clicked= %times%</H1></div>';
 
@@ -52,6 +54,9 @@ $(document).ready(function(){
 		$("#menu").append(thisButton);
 			
 		$("#button-"+catID).click(function(event){
+			$("#"+activeButton).addClass('btn-success').removeClass('btn-primary ');
+			activeButton= event.currentTarget.id;
+			$("#"+event.currentTarget.id).removeClass('btn-success').addClass('btn-primary ');
 			var catID = event.currentTarget.id.replace(/^button-/,"");
 			var catHTML = cats[catID].catHTML.replace("%times%",cats[catID].timesClicked);
 			$( "#cats").replaceWith('<div id="cats" >'+catHTML+'</div>');
