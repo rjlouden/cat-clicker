@@ -23,11 +23,13 @@ var cats = {
 		"image": "images/blackAndWhite.jpg",
 		"name": "Black and White Cat",
 		"timesClicked": 0,
+	},
+		"koreaMap": {
+		"image": "images/KoreaMap.jpg",
+		"name": "Korean Map",
+		"timesClicked": 0,
 	}
 };
-
-//var jPM = $.jPanelMenu();
-//jPM.on();
 
 var catDivHTML = '<div id="%div-name%"><H1>%name%</H1><img src="%image%" alt="%name%"></div>';
     catDivHTML = catDivHTML + '<div id = "%div-name%-times"><H1>Times Clicked= %times%</H1></div>';
@@ -41,13 +43,8 @@ for (var catID in cats){
 	cats[catID].catHTML=catHTML;
 }
 
-$("#cats").append(catHTML);
 
 $(document).ready(function(){
-	
-/*	var jPM = $.jPanelMenu({openPosition: '15%'});
-    jPM.on();
-	jPM.trigger();*/
 	
 	for (var catID in cats){
 		var thisButton = menuButtonHTML.replace("%name%",cats[catID].name);
@@ -57,8 +54,7 @@ $(document).ready(function(){
 		$("#button-"+catID).click(function(event){
 			var catID = event.currentTarget.id.replace(/^button-/,"");
 			var catHTML = cats[catID].catHTML.replace("%times%",cats[catID].timesClicked);
-			$( "#cats").replaceWith('<div id="cats" style="float: left">'+catHTML+'</div>');
-			console.log(catID);
+			$( "#cats").replaceWith('<div id="cats" >'+catHTML+'</div>');
 			
 			$("#"+catID).click(function(event){catClickEvent(event)});
 		});
