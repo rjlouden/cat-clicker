@@ -11,18 +11,27 @@ var cats = {
 	}
 };
 
+//var jPM = $.jPanelMenu();
+//jPM.on();
+
 var catDivHTML = '<div id="%div-name%"><H1>%name%</H1><img src="%image%" alt="%name%"></div>';
     catDivHTML = catDivHTML + '<div id = "%div-name%-times"><H1>Times Clicked= %times%</H1></div>';
 
 for (var catID in cats){
-	var thisCat = catDivHTML.replace(/%div-name%/g,catID);
-	thisCat = thisCat.replace("%image%",cats[catID].image);
-	thisCat = thisCat.replace(/%name%/g,cats[catID].name);
-	thisCat = thisCat.replace("%times%",cats[catID].timesClicked);
-    $("#cats").append(thisCat);
+	var catHTML = catDivHTML.replace(/%div-name%/g,catID);
+	catHTML = catHTML.replace("%image%",cats[catID].image);
+	catHTML = catHTML.replace(/%name%/g,cats[catID].name);
+	catHTML = catHTML.replace("%times%",cats[catID].timesClicked);
+	cats[catID].catHTML=catHTML;
+    $("#cats").append(catHTML);
 }
 
 $(document).ready(function(){
+	
+	var jPM = $.jPanelMenu({openPosition: '15%'});
+    jPM.on();
+	jPM.trigger();
+	
 	for (var catID in cats){
 		$("#"+catID).click(function(event){
 			var catID = event.currentTarget.id;
