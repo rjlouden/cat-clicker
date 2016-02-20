@@ -33,47 +33,78 @@ var cats = {
 
 var activeButton;
 
-var catDivHTML = '<div id="%div-name%"><H1>%name%</H1><img src="%image%" alt="%name%"></div>';
-    catDivHTML = catDivHTML + '<div id = "%div-name%-times"><H1>Times Clicked= %times%</H1></div>';
+var viewMenu = {
+	"menuButtonHTML" :'<button id="%button-id%" type="button" class="menu-button">%name%</button>',
+	"render" : function(){
+		var myCats = octopus.getCats();
+		for (catID in myCats){
+			var thisButton = viewMenu.menuButtonHTML.replace("%name%",myCats[catID].name);
+			thisButton = thisButton.replace("%button-id%","button-"+catID);
+			$("#menu").append(thisButton);
+			
+			$("#button-"+catID).click(function(event){ octopus.buttonClickEvent(event)});
+		}
+		
+		for (var firstCat in myCats) break;
+		$("#button-"+firstCat).trigger('click');		
+	},
+	"makeSelected":  function(button){
+		$("#"+button).removeClass('btn-success').addClass('btn-primary ');
+	},
+	"makeUnSelected": function(button){
+		$("#"+button).addClass('btn-success').removeClass('btn-primary');
+	}
+};
 
-var menuButtonHTML ='<button id="%button-id%" type="button" class="menu-button">%name%</button>';
+var viewCat = {
+	"catdivHTML" : '<div id="%div-name%"><H1>%name%</H1><img src="%image%" alt="%name%"></div>',
+	"catTimesHTML" : '<div id = "%div-name%-times"><H1>Times Clicked= %times%</H1></div>',
+	"renderCat": function(catID){
+		var thisCat = octopus.getThisCat(catID);
+		
+		var catHTML = viewCat.catdivHTML.replace(/%div-name%/g,catID);
+		catHTML = catHTML.replace("%image%",thisCat.image);
+		catHTML = catHTML.replace(/%name%/g,thisCat.name);
+		var catTimesHTML = viewCat.catTimesHTML.replace(/%div-name%/g,catID);
+		$("#cats").replaceWith('<div id="cats" >'+catHTML+catTimesHTML+'</div>');
+	},
+	"renderTimes": function(catID, times){
+		var thisCat = octopus.getThisCat(catID);
+		var catTimesHTML = viewCat.catTimesHTML.replace(/%div-name%/g,catID);
+		catTimesHTML = catTimesHTML.replace(/%times%/g,thisCat.timesClicked);
+		$( "#"+catID+"-times").replaceWith( catTimesHTML);
+	}
+};
 
-for (var catID in cats){
-	var catHTML = catDivHTML.replace(/%div-name%/g,catID);
-	catHTML = catHTML.replace("%image%",cats[catID].image);
-	catHTML = catHTML.replace(/%name%/g,cats[catID].name);
-	cats[catID].catHTML=catHTML;
+var octopus = {
+	getCats : function(){
+		return cats;
+	},
+	getThisCat : function(catID){
+		return cats[catID];
+	},
+	catClickEvent : function (event){
+		var catID = event.currentTarget.id;
+		cats[catID].timesClicked++;
+		viewCat.renderTimes(catID,cats[catID].timesClicked);
+	},
+	buttonClickEvent : function(event){
+		viewMenu.makeUnSelected(activeButton);
+		activeButton= event.currentTarget.id;
+		viewMenu.makeSelected(activeButton);
+		
+		var catID = event.currentTarget.id.replace(/^button-/,"");
+		
+		viewCat.renderCat(catID);
+		viewCat.renderTimes(catID);
+		
+		$("#"+catID).click(function(event){octopus.catClickEvent(event)});
+	}
 }
-
 
 $(document).ready(function(){
-	
-	for (var catID in cats){
-		var thisButton = menuButtonHTML.replace("%name%",cats[catID].name);
-		thisButton = thisButton.replace("%button-id%","button-"+catID);
-		$("#menu").append(thisButton);
-			
-		$("#button-"+catID).click(function(event){
-			$("#"+activeButton).addClass('btn-success').removeClass('btn-primary');
-			activeButton= event.currentTarget.id;
-			$("#"+activeButton).removeClass('btn-success').addClass('btn-primary ');
-			var catID = event.currentTarget.id.replace(/^button-/,"");
-			var catHTML = cats[catID].catHTML.replace("%times%",cats[catID].timesClicked);
-			$( "#cats").replaceWith('<div id="cats" >'+catHTML+'</div>');
-			
-			$("#"+catID).click(function(event){catClickEvent(event)});
-		});
-	
-		$("#button-sweet").trigger('click');
-	}
+	viewMenu.render();
 });
-
-function catClickEvent(event){
-	var catID = event.currentTarget.id;
-	var divTimesName = catID+"-times";
-	cats[catID].timesClicked++;
-	$( "#"+divTimesName).replaceWith( '<div id="'+divTimesName+'"><H1>Times Clicked = '+cats[catID].timesClicked+"</H1></div>" );
-}
 
 
 
