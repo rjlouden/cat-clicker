@@ -1,48 +1,49 @@
-var cats = {
-	"sweet": {
-		"image": "images/kitten.jpg",
-		"name": "Sweet Kitty",
-		"timesClicked": 0,
+var model = {
+	"cats" : {
+		"sweet": {
+			"image": "images/kitten.jpg",
+			"name": "Sweet Kitty",
+			"timesClicked": 0,
 		},
-	"happy": {
-		"image": "images/very-happy-kitten.jpg",
-		"name": "Happy Kitty",
-		"timesClicked": 0,
-	},
-	"fish": {
-		"image": "images/fishbowl.jpg",
-		"name": "Fish Bowl Kitty",
-		"timesClicked": 0,
+		"happy": {
+			"image": "images/very-happy-kitten.jpg",
+			"name": "Happy Kitty",
+			"timesClicked": 0,
 		},
-	"lovey": {
-		"image": "images/loveyCat.jpg",
-		"name": "Hugging Kittens",
-		"timesClicked": 0,
-	},
+		"fish": {
+			"image": "images/fishbowl.jpg",
+			"name": "Fish Bowl Kitty",
+			"timesClicked": 0,
+		},
+		"lovey": {
+			"image": "images/loveyCat.jpg",
+			"name": "Hugging Kittens",
+			"timesClicked": 0,
+		},
 		"justACat": {
-		"image": "images/blackAndWhite.jpg",
-		"name": "Black and White Cat",
-		"timesClicked": 0,
-	},
+			"image": "images/blackAndWhite.jpg",
+			"name": "Black and White Cat",
+			"timesClicked": 0,
+		},
 		"koreaMap": {
-		"image": "images/KoreaMap.jpg",
-		"name": "Korean Map",
-		"timesClicked": 0,
+			"image": "images/KoreaMap.jpg",
+			"name": "Korean Map",
+			"timesClicked": 0,
+		}
 	}
-};
+}
 
-var activeButton;
 
 var viewMenu = {
 	"menuButtonHTML" :'<button id="%button-id%" type="button" class="menu-button">%name%</button>',
 	"render" : function(){
 		var myCats = octopus.getCats();
 		for (catID in myCats){
-			var thisButton = viewMenu.menuButtonHTML.replace("%name%",myCats[catID].name);
+			var thisButton = this.menuButtonHTML.replace("%name%",myCats[catID].name);
 			thisButton = thisButton.replace("%button-id%","button-"+catID);
 			$("#menu").append(thisButton);
 			
-			$("#button-"+catID).click(function(event){ octopus.buttonClickEvent(event)});
+			$("#button-"+catID).click(function(event){ viewMenu.buttonClickEvent(event)});
 		}
 		
 		for (var firstCat in myCats) break;
@@ -53,57 +54,68 @@ var viewMenu = {
 	},
 	"makeUnSelected": function(button){
 		$("#"+button).addClass('btn-success').removeClass('btn-primary');
-	}
+	},
+	"buttonClickEvent" : function(event){
+		var currentCat = octopus.getCurrentCatName();
+		
+		this.makeUnSelected("button-"+currentCat);
+		this.makeSelected(event.currentTarget.id);
+		currentCat = event.currentTarget.id.replace(/^button-/,"")
+		octopus.setCurrentCatName(currentCat);
+		
+		viewCat.renderCat(currentCat);
+	},
 };
 
 var viewCat = {
-	"catdivHTML" : '<div id="%div-name%"><H1>%name%</H1><img src="%image%" alt="%name%"></div>',
-	"catTimesHTML" : '<div id = "%div-name%-times"><H1>Times Clicked= %times%</H1></div>',
+	"catTimesString" : 'Times Clicked= %times%',
+	"init": function(){
+		this.catName = document.getElementById("cat-name");
+		this.catCount = document.getElementById("cat-count");
+		this.catImg = document.getElementById("cat-img");
+		
+		$("#cat-img").click(function(event){viewCat.catClickEvent(event)});
+	},
+	"catClickEvent" : function (event){
+		var currentCat = octopus.getCurrentCatName();
+		
+		octopus.incrementTimesClicked(currentCat);
+		this.renderCat(currentCat);
+	},
 	"renderCat": function(catID){
 		var thisCat = octopus.getThisCat(catID);
 		
-		var catHTML = viewCat.catdivHTML.replace(/%div-name%/g,catID);
-		catHTML = catHTML.replace("%image%",thisCat.image);
-		catHTML = catHTML.replace(/%name%/g,thisCat.name);
-		var catTimesHTML = viewCat.catTimesHTML.replace(/%div-name%/g,catID);
-		$("#cats").replaceWith('<div id="cats" >'+catHTML+catTimesHTML+'</div>');
-	},
-	"renderTimes": function(catID, times){
-		var thisCat = octopus.getThisCat(catID);
-		var catTimesHTML = viewCat.catTimesHTML.replace(/%div-name%/g,catID);
-		catTimesHTML = catTimesHTML.replace(/%times%/g,thisCat.timesClicked);
-		$( "#"+catID+"-times").replaceWith( catTimesHTML);
+		this.catName.textContent = thisCat.name;
+		this.catImg.src = thisCat.image;
+		this.catImg.alt = thisCat.name;
+		this.catCount.textContent = this.catTimesString.replace("%times%",thisCat.timesClicked);
 	}
 };
 
 var octopus = {
 	getCats : function(){
-		return cats;
+		return model.cats;
 	},
 	getThisCat : function(catID){
-		return cats[catID];
+		return model.cats[catID];
 	},
-	catClickEvent : function (event){
-		var catID = event.currentTarget.id;
-		cats[catID].timesClicked++;
-		viewCat.renderTimes(catID,cats[catID].timesClicked);
+	getCurrentCatName: function(){
+		return model.currentCat;
 	},
-	buttonClickEvent : function(event){
-		viewMenu.makeUnSelected(activeButton);
-		activeButton= event.currentTarget.id;
-		viewMenu.makeSelected(activeButton);
-		
-		var catID = event.currentTarget.id.replace(/^button-/,"");
-		
-		viewCat.renderCat(catID);
-		viewCat.renderTimes(catID);
-		
-		$("#"+catID).click(function(event){octopus.catClickEvent(event)});
+	setCurrentCatName: function(catID){
+		model.currentCat = catID;
+	},
+	incrementTimesClicked: function(catID){
+		model.cats[catID].timesClicked++;
+	},
+	"init": function(){
+		viewCat.init();
+		viewMenu.render();
 	}
 }
 
 $(document).ready(function(){
-	viewMenu.render();
+	octopus.init();
 });
 
 
