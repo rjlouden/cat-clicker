@@ -41,7 +41,7 @@ var viewMenu = {
 		for (catID in myCats){
 			var thisButton = this.menuButtonHTML.replace("%name%",myCats[catID].name);
 			thisButton = thisButton.replace("%button-id%","button-"+catID);
-			$("#menu").append(thisButton);
+			$("#cat-menu").append(thisButton);
 			
 			$("#button-"+catID).click(function(event){ viewMenu.buttonClickEvent(event)});
 		}
@@ -116,7 +116,12 @@ var octopus = {
 
 $(document).ready(function(){
 	octopus.init();
-});
+	var jPM = $.jPanelMenu({
+		openPosition: "23%"
+	});
+        jPM.on();
+    });
+
 
 
 

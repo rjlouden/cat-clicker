@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html>
-		
+<html>		
 <head>
 	<meta charset="utf-8">
 	<link href="css/styles.css" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	 <script src="http://jpanelmenu.com/js/lib/jquery.jpanelmenu.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	
 	<title>Cat Clicker</title>
 </head>
-
 <body>
 
 <div class="row">
-<div id="menu" class="btn-group-justified col-12" style="text-align:center"> <!-- style="width:20%;float:left;height:100%">--></div>
+<div id="cat-menu" class="btn-group-justified col-12" style="text-align:center"> <!-- style="width:20%;float:left;height:100%">--></div>
 </div>
 <div class="row">
-	<div id="cats" class="col-12" style="margin:auto">
+	<div id="cats" class="col-12">
 		<div id="cat">
 			<H1 id="cat-name"></H1>
 			<img id="cat-img" src="" alt="">
@@ -24,6 +23,19 @@
 		</div>',
 	</div>
 </div>
+<div class="row">
+	<div class="wrap">
+        <ul id="menu">
+			<li><H2>Cat Details</H2></li>
+            <li>Name:<input type="text" name="cat-name-input"></li>
+            <li>URL:<input type="text" name="cat-url-input"></li>
+            <li>Clicked:<input type="text" name="clicked-input"></li>
+			<li><button id="submit" type="button" >Submit</button></li>
+        </ul>
+        </div>
+	<button id="admin-button" class="menu-trigger" type="button" >Admin</button>
+</div>
+
 
 <script src="js/cats.js"></script>
 
