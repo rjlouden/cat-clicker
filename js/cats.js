@@ -142,7 +142,7 @@ var viewAdmin = {
 		if (thisCat.name !== this.catName.value || 
 		thisCat.image !== this.catURL.value || 
 		thisCat.timesClicked !== this.catClicked.value){
-			if (/^[1-9]+$/.test(this.catClicked.value, 10)){
+			if (/^[0-9]+$/.test(this.catClicked.value, 10)){
 				octopus.updateCat(currentCat, {
 					name: this.catName.value, 
 					URL: this.catURL.value, 
