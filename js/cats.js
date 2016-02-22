@@ -108,8 +108,16 @@ var viewAdmin = {
 		this.jPM = $.jPanelMenu({
 			openPosition: "23%",
 			closeOnContentClick: false,
-			afterOpen: function(){viewAdmin.render()}
-			});
+			afterOpen: function(){
+				viewAdmin.render();
+				$("#cat-menu").addClass('panel');
+				$("#cats").addClass('panel');
+			},
+			afterClose: function(){
+				$("#cat-menu").removeClass('panel');
+				$("#cats").removeClass('panel');
+			}
+		});
         this.jPM.on();
 		
 		$("button#save").click(function(event){ viewAdmin.saveEvent()});
@@ -134,11 +142,15 @@ var viewAdmin = {
 		if (thisCat.name !== this.catName.value || 
 		thisCat.image !== this.catURL.value || 
 		thisCat.timesClicked !== this.catClicked.value){
-			octopus.updateCat(currentCat, {
-				name: this.catName.value, 
-				URL: this.catURL.value, 
-				clicked: this.catClicked.value} );
-			viewCat.renderCat(currentCat);
+			if (/^[1-9]+$/.test(this.catClicked.value, 10)){
+				octopus.updateCat(currentCat, {
+					name: this.catName.value, 
+					URL: this.catURL.value, 
+					clicked: this.catClicked.value} );
+				
+				viewCat.renderCat(currentCat);	
+			}
+			
 		}
 	}
 };
