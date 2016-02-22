@@ -37,12 +37,7 @@ img {
 	background: #134EA7;
 }
 
-#submit{
-	font-size: 80%;
-	font-weight: 500;
-}
-
-#cancel{
+#save, #reset{
 	font-size: 80%;
 	font-weight: 500;
 }

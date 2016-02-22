@@ -36,14 +36,16 @@ var model = {
 
 var viewMenu = {
 	"menuButtonHTML" :'<button id="%button-id%" type="button" class="menu-button">%name%</button>',
+	"catButton": {},
 	"render" : function(){
 		var myCats = octopus.getCats();
 		for (catID in myCats){
 			var thisButton = this.menuButtonHTML.replace("%name%",myCats[catID].name);
 			thisButton = thisButton.replace("%button-id%","button-"+catID);
 			$("#cat-menu").append(thisButton);
-			
 			$("#button-"+catID).click(function(event){ viewMenu.buttonClickEvent(event)});
+			
+			this.catButton[catID] = document.getElementById("button-"+catID);
 		}
 		
 		for (var firstCat in myCats) break;
@@ -65,6 +67,11 @@ var viewMenu = {
 		
 		viewCat.renderCat(currentCat);
 	},
+	"updateText" : function(catID){
+		var thisCat= octopus.getThisCat(catID);
+		this.catButton[catID].textContent=thisCat.name;
+		
+	}
 };
 
 var viewCat = {
@@ -105,8 +112,8 @@ var viewAdmin = {
 			});
         this.jPM.on();
 		
-		$("button#submit").click(function(event){ viewAdmin.submitEvent()});
-		$("button#cancel").click(function(event){ viewAdmin.render()});
+		$("button#save").click(function(event){ viewAdmin.saveEvent()});
+		$("button#reset").click(function(event){ viewAdmin.render()});
 		
 		this.catName = document.getElementsByName("cat-name-input")[1];
 		this.catURL = document.getElementsByName("cat-url-input")[1];
@@ -120,7 +127,7 @@ var viewAdmin = {
 		viewAdmin.catClicked.value=thisCat.timesClicked;
 		
 	},
-	submitEvent: function(){
+	saveEvent: function(){
 		var currentCat = octopus.getCurrentCatName();
 		var thisCat=octopus.getThisCat(currentCat);
 		
@@ -158,7 +165,10 @@ var octopus = {
 		viewMenu.render();
 	},
 	updateCat: function(catID, catObject){
-		model.cats[catID].name=catObject.name;
+		if (model.cats[catID].name !== catObject.name){
+			model.cats[catID].name=catObject.name;
+			viewMenu.updateText(catID);
+		}
 		model.cats[catID].image=catObject.URL;
 		model.cats[catID].timesClicked=catObject.clicked;		
 	}
