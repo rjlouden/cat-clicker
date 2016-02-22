@@ -1,31 +1,31 @@
 var model = {
 	"cats" : {
-		"sweet": {
+		"cat1": {
 			"image": "images/kitten.jpg",
 			"name": "Sweet Kitty",
 			"timesClicked": 0,
 		},
-		"happy": {
+		"cat2": {
 			"image": "images/very-happy-kitten.jpg",
 			"name": "Happy Kitty",
 			"timesClicked": 0,
 		},
-		"fish": {
+		"cat3": {
 			"image": "images/fishbowl.jpg",
 			"name": "Fish Bowl Kitty",
 			"timesClicked": 0,
 		},
-		"lovey": {
+		"cat4": {
 			"image": "images/loveyCat.jpg",
 			"name": "Hugging Kittens",
 			"timesClicked": 0,
 		},
-		"justACat": {
+		"cat5": {
 			"image": "images/blackAndWhite.jpg",
 			"name": "Black and White Cat",
 			"timesClicked": 0,
 		},
-		"koreaMap": {
+		"cat6": {
 			"image": "images/KoreaMap.jpg",
 			"name": "Korean Map",
 			"timesClicked": 0,
@@ -89,6 +89,49 @@ var viewCat = {
 		this.catImg.src = thisCat.image;
 		this.catImg.alt = thisCat.name;
 		this.catCount.textContent = this.catTimesString.replace("%times%",thisCat.timesClicked);
+		
+		if(viewAdmin.jPM.isOpen()){
+			viewAdmin.render();	
+		}
+	}
+};
+
+var viewAdmin = {
+	init: function(){
+		this.jPM = $.jPanelMenu({
+			openPosition: "23%",
+			closeOnContentClick: false,
+			afterOpen: function(){viewAdmin.render()}
+			});
+        this.jPM.on();
+		
+		$("button#submit").click(function(event){ viewAdmin.submitEvent()});
+		
+		this.catName = document.getElementsByName("cat-name-input")[1];
+		this.catURL = document.getElementsByName("cat-url-input")[1];
+		this.catClicked = document.getElementsByName("clicked-input")[1];
+	},
+	render: function(){
+		var thisCat=octopus.getThisCat(octopus.getCurrentCatName());
+		
+		viewAdmin.catName.value=thisCat.name;
+		viewAdmin.catURL.value=thisCat.image;
+		viewAdmin.catClicked.value=thisCat.timesClicked;
+		
+	},
+	submitEvent: function(){
+		var currentCat = octopus.getCurrentCatName();
+		var thisCat=octopus.getThisCat(currentCat);
+		
+		if (thisCat.name !== this.catName.value || 
+		thisCat.image !== this.catURL.value || 
+		thisCat.timesClicked !== this.catClicked.value){
+			octopus.updateCat(currentCat, {
+				name: this.catName.value, 
+				URL: this.catURL.value, 
+				clicked: this.catClicked.value} );
+			viewCat.renderCat(currentCat);
+		}
 	}
 };
 
@@ -109,17 +152,19 @@ var octopus = {
 		model.cats[catID].timesClicked++;
 	},
 	"init": function(){
+		viewAdmin.init();
 		viewCat.init();
 		viewMenu.render();
+	},
+	updateCat: function(catID, catObject){
+		model.cats[catID].name=catObject.name;
+		model.cats[catID].image=catObject.URL;
+		model.cats[catID].timesClicked=catObject.clicked;		
 	}
 }
 
 $(document).ready(function(){
 	octopus.init();
-	var jPM = $.jPanelMenu({
-		openPosition: "23%"
-	});
-        jPM.on();
     });
 
 
