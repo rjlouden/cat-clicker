@@ -71,6 +71,13 @@ var viewMenu = {
 		var thisCat= octopus.getThisCat(catID);
 		this.catButton[catID].textContent=thisCat.name;
 		
+	},
+	"updatePanel": function (inPanel){
+		if(inPanel) {
+			$("#cat-menu").addClass('panel'); }
+		else {
+			$("#cat-menu").removeClass('panel');
+		}
 	}
 };
 
@@ -100,6 +107,13 @@ var viewCat = {
 		if(viewAdmin.jPM.isOpen()){
 			viewAdmin.render();	
 		}
+	},
+	"updatePanel": function (inPanel){
+		if(inPanel) {
+			$("#cats").addClass('panel'); }
+		else {
+			$("#cats").removeClass('panel');
+		}
 	}
 };
 
@@ -110,12 +124,12 @@ var viewAdmin = {
 			closeOnContentClick: false,
 			afterOpen: function(){
 				viewAdmin.render();
-				$("#cat-menu").addClass('panel');
-				$("#cats").addClass('panel');
+				viewMenu.updatePanel(true);
+				viewCat.updatePanel(true);
 			},
 			afterClose: function(){
-				$("#cat-menu").removeClass('panel');
-				$("#cats").removeClass('panel');
+				viewMenu.updatePanel(false);
+				viewCat.updatePanel(false);
 			}
 		});
         this.jPM.on();
