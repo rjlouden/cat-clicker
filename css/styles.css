@@ -42,6 +42,11 @@ img {
 	font-weight: 500;
 }
 
+#cancel{
+	font-size: 80%;
+	font-weight: 500;
+}
+
 .wrap{
 	display:none;	
 }

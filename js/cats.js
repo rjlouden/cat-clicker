@@ -106,6 +106,7 @@ var viewAdmin = {
         this.jPM.on();
 		
 		$("button#submit").click(function(event){ viewAdmin.submitEvent()});
+		$("button#cancel").click(function(event){ viewAdmin.render()});
 		
 		this.catName = document.getElementsByName("cat-name-input")[1];
 		this.catURL = document.getElementsByName("cat-url-input")[1];
